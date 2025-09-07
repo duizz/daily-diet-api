@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 import { database } from "../database";
 
 export async function userRoutes(app: FastifyInstance) {
-  (app.post("/register", async (req, reply) => {
+  app.post("/register", async (req, reply) => {
     const UserSchema = z.object({
       username: z.string(),
       password: z.string(),
@@ -20,7 +20,7 @@ export async function userRoutes(app: FastifyInstance) {
       sessionId = randomUUID();
 
       reply.cookie("sessionId", sessionId, {
-        path: "/meals",
+        path: "/",
         maxAge: 60 * 60 * 24 * 5, // 5 days
       });
     }
@@ -42,10 +42,5 @@ export async function userRoutes(app: FastifyInstance) {
     }
 
     return reply.status(201).send();
-  }),
-    app.get("/users", async (req, reply) => {
-      const users = await database("users").select();
-
-      return reply.send({ users: users });
-    }));
+  })
 }

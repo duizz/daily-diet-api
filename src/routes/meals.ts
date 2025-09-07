@@ -3,10 +3,12 @@ import { z } from "zod";
 import { database } from "../database";
 import { checkSessionIdExists } from "../middlewares/check-session-id-exists";
 import { randomUUID } from "node:crypto";
+import { formatDate, formatTime } from "../utils/format-date";
+import { on } from "node:stream";
 
 export async function mealsRoutes(app: FastifyInstance) {
   app.post(
-    "/meals",
+    "/",
     {
       preHandler: [checkSessionIdExists],
     },
@@ -35,8 +37,8 @@ export async function mealsRoutes(app: FastifyInstance) {
         user_id: user.id,
         name: meal.name,
         description: meal.description,
-        some_date: new Date().getDate().toLocaleString("PT-BR"),
-        some_time: new Date().getHours(),
+        some_date: formatDate,
+        some_time: formatTime,
         in_diet: meal.in_diet,
       });
 
@@ -45,29 +47,37 @@ export async function mealsRoutes(app: FastifyInstance) {
   );
 
   app.get(
-    "/meals",
+    "/",
     {
       preHandler: [checkSessionIdExists],
     },
     async (req, reply) => {
       const sessionId = req.cookies.sessionId;
 
-      const user = await database("users")
-        .where("session_id", sessionId)
-        .first();
+      try {
+        const user = await database("users")
+          .where("session_id", sessionId)
+          .first();
 
-      if (!user.id) {
-        return reply.status(400).send({ message: "Invalid credentials." });
+        if (!user.id) {
+          return reply.status(400).send({ message: "Invalid credentials." });
+        }
+
+        const meals = await database("meals").where("user_id", user.id);
+
+        if(meals.length <= 0 ) {
+          return reply.status(400).send({ message: 'User meal not found.'});
+        }
+
+        return reply.status(200).send({ meals: meals });
+      } catch (error) {
+        return reply.status(500).send({ error: error  });
       }
-
-      const meals = await database("meals").where("user_id", user.id);
-
-      return reply.status(200).send({ meals: meals });
     },
   );
 
   app.get(
-    "/meals/:id",
+    "/:id",
     {
       preHandler: [checkSessionIdExists],
     },
@@ -83,29 +93,24 @@ export async function mealsRoutes(app: FastifyInstance) {
       }
 
       const sessionId = req.cookies.sessionId;
-      const user = await database("users")
-        .where("id", id)
-        .andWhere("session_id", sessionId)
-        .first();
 
-      if (!user.id) {
+      const userMeals = await database("users")
+        .leftJoin("meals", "users.id", "meals.user_id")
+        .where({ "users.session_id": sessionId, "meals.id": id})
+        .select("meals.*")
+        .first()
+
+      if (!userMeals.user_id) {
         return reply.status(400).send({ message: "Invalid credentials." });
       }
 
-      try {
-        const meals = await database("meals").where("user_id", user.id).first();
+      return reply.status(200).send({ meals: userMeals });
 
-        if (user.id === meals.user_id) {
-          return reply.status(200).send({ meals: meals });
-        }
-      } catch (error) {
-        return reply.status(401).send({ error: "Unaunthorized " });
-      }
-    },
+    }
   );
 
   app.put(
-    "/meals/:id",
+    "/:id",
     { preHandler: [checkSessionIdExists] },
     async (req, reply) => {
       const paramsSchema = z.object({
@@ -115,8 +120,8 @@ export async function mealsRoutes(app: FastifyInstance) {
       const mealSchema = z.object({
         name: z.string(),
         description: z.string(),
-        some_date: z.number(),
-        some_time: z.number(),
+        some_date: z.string(),
+        some_time: z.string(),
         in_diet: z.boolean(),
       });
 
@@ -149,7 +154,7 @@ export async function mealsRoutes(app: FastifyInstance) {
   );
 
   app.delete(
-    "/meals/:id",
+    "/:id",
     {
       preHandler: [checkSessionIdExists],
     },
@@ -179,4 +184,41 @@ export async function mealsRoutes(app: FastifyInstance) {
       }
     },
   );
+
+  app.get("/metrics", {
+    preHandler: [ checkSessionIdExists],
+  },
+  async (req, reply) => {
+
+    const sessionId = req.cookies.sessionId
+
+    const user = await database("users").where("session_id", sessionId).first()
+
+    const totalMeals = await database("meals").where("user_id", user.id).orderBy('some_date', "desc")
+    const totalInDiet = await database("meals").where({ "user_id": user.id, "in_diet": true }).count('id', { as: 'total'}).first()
+    const totalOutDiet = await database("meals").where({ "user_id": user.id, "in_diet": false }).count('id', { as: 'total'}).first()
+
+    let bestMealSequence = 0;
+    let currentSequence = 0;
+
+    for (const meal of totalMeals){
+      if(!!meal.in_diet){
+        currentSequence++
+      } else if(currentSequence > bestMealSequence){
+        bestMealSequence = currentSequence
+      } else{
+        currentSequence = 0
+      }
+    }
+
+    return reply.send({
+      metrics: {
+        totatMeals: totalMeals?.length,
+        totalMealsInDiet: totalInDiet?.total,
+        totalMealsOutDiet: totalOutDiet?.total,
+        bestMealSequence: bestMealSequence
+      }
+    })
+
+  })
 }

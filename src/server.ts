@@ -8,7 +8,9 @@ const server = fastify();
 
 server.register(cookies);
 server.register(userRoutes);
-server.register(mealsRoutes);
+server.register(mealsRoutes, {
+  prefix: "/meals"
+});
 
 server
   .listen({
