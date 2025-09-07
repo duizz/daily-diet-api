@@ -2,7 +2,7 @@
 
 Uma API REST para gerenciamento de dieta diária, desenvolvida com Node.js, TypeScript e Fastify. Esta aplicação permite que usuários registrem suas refeições e acompanhem suas métricas de dieta.
 
-## 🚀 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - **Node.js** - Runtime JavaScript
 - **TypeScript** - Linguagem de programação
@@ -13,7 +13,7 @@ Uma API REST para gerenciamento de dieta diária, desenvolvida com Node.js, Type
 - **Zod** - Validação de schemas
 - **tsx** - Executor TypeScript
 
-## 📋 Funcionalidades
+## Funcionalidades
 
 ### Autenticação
 - Registro de usuários com hash de senha seguro
@@ -33,7 +33,7 @@ Uma API REST para gerenciamento de dieta diária, desenvolvida com Node.js, Type
 - Total de refeições fora da dieta
 - Melhor sequência de refeições dentro da dieta
 
-## 🗄️ Estrutura do Banco de Dados
+## Estrutura do Banco de Dados
 
 ### Tabela `users`
 - `id` (UUID) - Identificador único
@@ -50,7 +50,7 @@ Uma API REST para gerenciamento de dieta diária, desenvolvida com Node.js, Type
 - `some_time` (TIME) - Horário da refeição
 - `in_diet` (BOOLEAN) - Se está dentro da dieta
 
-## 🛠️ Instalação e Configuração
+## Instalação e Configuração
 
 ### Pré-requisitos
 - Node.js (versão 18 ou superior)
@@ -89,7 +89,7 @@ npm run dev
 
 O servidor estará rodando em `http://localhost:3333`
 
-## 📚 Documentação da API
+## Documentação da API
 
 ### Base URL
 ```
@@ -220,37 +220,20 @@ Cookie: sessionId=<session-id>
 }
 ```
 
-## 🔧 Scripts Disponíveis
+## Scripts Disponíveis
 
 - `npm run dev` - Inicia o servidor em modo de desenvolvimento com hot reload
 - `npm run knex` - Executa comandos do Knex.js para migrações
 
-## 🏗️ Estrutura do Projeto
 
-```
-daily-diet-api/
-├── db/
-│   └── migrations/          # Migrações do banco de dados
-├── src/
-│   ├── env/                 # Configuração de variáveis de ambiente
-│   ├── middlewares/         # Middlewares personalizados
-│   ├── routes/              # Definição das rotas da API
-│   ├── utils/               # Utilitários e funções auxiliares
-│   ├── database.ts          # Configuração do banco de dados
-│   └── server.ts            # Arquivo principal do servidor
-├── knexfile.ts              # Configuração do Knex.js
-├── package.json
-└── tsconfig.json            # Configuração do TypeScript
-```
-
-## 🔒 Segurança
+## Segurança
 
 - Senhas são hasheadas usando Argon2
 - Autenticação baseada em sessão com cookies
 - Validação de entrada usando Zod
 - Verificação de autorização em todas as rotas protegidas
 
-## 🚨 Códigos de Status HTTP
+## Códigos de Status HTTP
 
 - `200` - Sucesso
 - `201` - Criado com sucesso
@@ -259,10 +242,10 @@ daily-diet-api/
 - `401` - Não autorizado
 - `500` - Erro interno do servidor
 
-## 📝 Licença
+## Licença
 
 Este projeto está sob a licença ISC. Veja o arquivo `LICENSE` para mais detalhes.
 
-## 👨‍💻 Autor
+## Autor
 
-Desenvolvido com ❤️ para ajudar no controle de dieta diária.
+Desenvolvido para ajudar no controle de dieta diária.
