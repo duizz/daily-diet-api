@@ -3,8 +3,6 @@ import { z } from "zod";
 import { database } from "../database";
 import { checkSessionIdExists } from "../middlewares/check-session-id-exists";
 import { randomUUID } from "node:crypto";
-import { formatDate, formatTime } from "../utils/format-date";
-import { on } from "node:stream";
 
 export async function mealsRoutes(app: FastifyInstance) {
   app.post(
@@ -17,6 +15,8 @@ export async function mealsRoutes(app: FastifyInstance) {
         meal: z.object({
           name: z.string(),
           description: z.string(),
+          some_date: z.iso.date(),
+          some_time: z.iso.time(),
           in_diet: z.boolean(),
         }),
       });
@@ -37,8 +37,8 @@ export async function mealsRoutes(app: FastifyInstance) {
         user_id: user.id,
         name: meal.name,
         description: meal.description,
-        some_date: formatDate,
-        some_time: formatTime,
+        some_date: meal.some_date,
+        some_time: meal.some_time,
         in_diet: meal.in_diet,
       });
 
@@ -69,7 +69,7 @@ export async function mealsRoutes(app: FastifyInstance) {
           return reply.status(400).send({ message: 'User meal not found.'});
         }
 
-        return reply.status(200).send({ meals: meals });
+        return reply.send({ meals: meals });
       } catch (error) {
         return reply.status(500).send({ error: error  });
       }
@@ -104,7 +104,7 @@ export async function mealsRoutes(app: FastifyInstance) {
         return reply.status(400).send({ message: "Invalid credentials." });
       }
 
-      return reply.status(200).send({ meals: userMeals });
+      return reply.send({ meals: userMeals });
 
     }
   );
@@ -120,14 +120,19 @@ export async function mealsRoutes(app: FastifyInstance) {
       const mealSchema = z.object({
         name: z.string(),
         description: z.string(),
-        some_date: z.string(),
-        some_time: z.string(),
+        some_date: z.iso.date(),
+        some_time: z.iso.time(),
         in_diet: z.boolean(),
       });
 
       const { id } = paramsSchema.parse(req.params);
-      const { name, description, some_date, some_time, in_diet } =
-        mealSchema.parse(req.body);
+      const {
+        name,
+        description,
+        some_date,
+        some_time,
+        in_diet
+      } = mealSchema.parse(req.body);
 
       if (!id) {
         return reply.status(400).send({ message: "Daily Diet not found." });
@@ -202,10 +207,11 @@ export async function mealsRoutes(app: FastifyInstance) {
     let currentSequence = 0;
 
     for (const meal of totalMeals){
-      if(!!meal.in_diet){
+      if(meal.in_diet === 1){
         currentSequence++
-      } else if(currentSequence > bestMealSequence){
-        bestMealSequence = currentSequence
+        if(currentSequence > bestMealSequence){
+          bestMealSequence = currentSequence
+        }
       } else{
         currentSequence = 0
       }

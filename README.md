@@ -2,7 +2,7 @@
 
 Uma API REST para gerenciamento de dieta diária, desenvolvida com Node.js, TypeScript e Fastify. Esta aplicação permite que usuários registrem suas refeições e acompanhem suas métricas de dieta.
 
-## Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas
 
 - **Node.js** - Runtime JavaScript
 - **TypeScript** - Linguagem de programação
@@ -13,35 +13,35 @@ Uma API REST para gerenciamento de dieta diária, desenvolvida com Node.js, Type
 - **Zod** - Validação de schemas
 - **tsx** - Executor TypeScript
 
-## Funcionalidades
+## ✨ Funcionalidades
 
-### Autenticação
+### 🔐 Autenticação
 - Registro de usuários com hash de senha seguro
 - Sistema de sessão baseado em cookies
 - Middleware de verificação de sessão
 
-### Gerenciamento de Refeições
+### 🍴 Gerenciamento de Refeições
 - **Criar refeição** - Adicionar nova refeição com nome, descrição e status da dieta
 - **Listar refeições** - Visualizar todas as refeições do usuário
 - **Buscar refeição** - Obter detalhes de uma refeição específica
 - **Atualizar refeição** - Modificar dados de uma refeição existente
 - **Deletar refeição** - Remover uma refeição
 
-### Métricas
+### 📊 Métricas
 - Total de refeições registradas
 - Total de refeições dentro da dieta
 - Total de refeições fora da dieta
 - Melhor sequência de refeições dentro da dieta
 
-## Estrutura do Banco de Dados
+## 🗄️ Estrutura do Banco de Dados
 
-### Tabela `users`
+### 👤 Tabela `users`
 - `id` (UUID) - Identificador único
 - `session_id` (UUID) - ID da sessão do usuário
 - `username` (TEXT) - Nome de usuário único
 - `password` (TEXT) - Senha hasheada
 
-### Tabela `meals`
+### 🍽️ Tabela `meals`
 - `id` (UUID) - Identificador único
 - `user_id` (UUID) - Referência ao usuário
 - `name` (TEXT) - Nome da refeição
@@ -50,53 +50,53 @@ Uma API REST para gerenciamento de dieta diária, desenvolvida com Node.js, Type
 - `some_time` (TIME) - Horário da refeição
 - `in_diet` (BOOLEAN) - Se está dentro da dieta
 
-## Instalação e Configuração
+## 🚀 Instalação e Configuração
 
-### Pré-requisitos
+### 📋 Pré-requisitos
 - Node.js (versão 18 ou superior)
 - npm ou yarn
 
-### Passos para instalação
+### 📝 Passos para instalação
 
-1. **Clone o repositório**
+1. **📥 Clone o repositório**
 ```bash
 git clone <url-do-repositorio>
 cd daily-diet-api
 ```
 
-2. **Instale as dependências**
+2. **📦 Instale as dependências**
 ```bash
 npm install
 ```
 
-3. **Configure as variáveis de ambiente**
-Crie um arquivo `.env` na raiz do projeto:
+3. **⚙️ Configure as variáveis de ambiente**
+Use o arquivo `.env.example` de base que está na raiz do projeto:
 ```env
 NODE_ENV=development
 DATABASE_URL=./src/database/database.db
 PORT=3333
 ```
 
-4. **Execute as migrações do banco de dados**
+4. **🗃️ Execute as migrações do banco de dados**
 ```bash
 npm run knex migrate:latest
 ```
 
-5. **Inicie o servidor de desenvolvimento**
+5. **▶️ Inicie o servidor de desenvolvimento**
 ```bash
 npm run dev
 ```
 
 O servidor estará rodando em `http://localhost:3333`
 
-## Documentação da API
+## 📚 Documentação da API
 
-### Base URL
+### 🌐 Base URL
 ```
 http://localhost:3333
 ```
 
-### Endpoints
+### 🔗 Endpoints
 
 #### 1. Registro de Usuário
 ```http
@@ -220,32 +220,23 @@ Cookie: sessionId=<session-id>
 }
 ```
 
-## Scripts Disponíveis
+## 🛠️ Scripts Disponíveis
 
 - `npm run dev` - Inicia o servidor em modo de desenvolvimento com hot reload
 - `npm run knex` - Executa comandos do Knex.js para migrações
 
 
-## Segurança
+## 🔒 Segurança
 
 - Senhas são hasheadas usando Argon2
 - Autenticação baseada em sessão com cookies
 - Validação de entrada usando Zod
 - Verificação de autorização em todas as rotas protegidas
 
-## Códigos de Status HTTP
+## 📄 Licença
 
-- `200` - Sucesso
-- `201` - Criado com sucesso
-- `203` - Atualizado/Deletado com sucesso
-- `400` - Dados inválidos ou não encontrados
-- `401` - Não autorizado
-- `500` - Erro interno do servidor
+Este projeto está sob a licença ISC.
 
-## Licença
-
-Este projeto está sob a licença ISC. Veja o arquivo `LICENSE` para mais detalhes.
-
-## Autor
+## 💻 Autor
 
 Desenvolvido para ajudar no controle de dieta diária.
