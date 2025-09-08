@@ -123,6 +123,8 @@ Cookie: sessionId=<session-id>
   "meal": {
     "name": "Café da manhã",
     "description": "Aveia com frutas",
+    "some_date": "2024-01-15",
+    "some_time": "08:30:00",
     "in_diet": true
   }
 }
