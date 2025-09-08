@@ -16,6 +16,7 @@ build
 
 # Database
 db/app.db
+db/test.db
 
 # Ambiente
 .env

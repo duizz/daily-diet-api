@@ -219,7 +219,7 @@ export async function mealsRoutes(app: FastifyInstance) {
 
     return reply.send({
       metrics: {
-        totatMeals: totalMeals?.length,
+        totalMeals: totalMeals?.length,
         totalMealsInDiet: totalInDiet?.total,
         totalMealsOutDiet: totalOutDiet?.total,
         bestMealSequence: bestMealSequence
