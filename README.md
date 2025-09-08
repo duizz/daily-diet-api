@@ -12,6 +12,8 @@ Uma API REST para gerenciamento de dieta diária, desenvolvida com Node.js, Type
 - **Argon2** - Hash de senhas
 - **Zod** - Validação de schemas
 - **tsx** - Executor TypeScript
+- **Vitest** - Framework de testes
+- **Supertest** - Testes de API
 
 ## ✨ Funcionalidades
 
@@ -70,10 +72,17 @@ npm install
 ```
 
 3. **⚙️ Configure as variáveis de ambiente**
-Use o arquivo `.env.example` de base que está na raiz do projeto:
+Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
 ```env
 NODE_ENV=development
-DATABASE_URL=./src/database/database.db
+DATABASE_URL=./db/app.db
+PORT=3333
+```
+
+Para testes, crie também um arquivo `.env.test`:
+```env
+NODE_ENV=test
+DATABASE_URL=./db/test.db
 PORT=3333
 ```
 
@@ -214,7 +223,7 @@ Cookie: sessionId=<session-id>
 ```json
 {
   "metrics": {
-    "totatMeals": 10,
+    "totalMeals": 10,
     "totalMealsInDiet": 7,
     "totalMealsOutDiet": 3,
     "bestMealSequence": 4
@@ -226,7 +235,34 @@ Cookie: sessionId=<session-id>
 
 - `npm run dev` - Inicia o servidor em modo de desenvolvimento com hot reload
 - `npm run knex` - Executa comandos do Knex.js para migrações
+- `npm test` - Executa os testes usando Vitest
 
+## 🧪 Testes
+
+O projeto utiliza **Vitest** como framework de testes e **Supertest** para testes de integração da API.
+
+### 📋 Executando os Testes
+
+```bash
+# Executar todos os testes
+npm test
+
+# Executar testes em modo watch
+npm test -- --watch
+
+# Executar testes com coverage
+npm test -- --coverage
+```
+
+### 📁 Estrutura de Testes
+
+Os arquivos de teste estão localizados junto com os arquivos de código:
+- `src/routes/meals.test.ts` - Testes das rotas de refeições
+- `src/routes/register-user.test.ts` - Testes das rotas de usuário
+
+### 🔧 Configuração de Testes
+
+Os testes utilizam um banco de dados SQLite separado (`./db/test.db`) configurado através do arquivo `.env.test`.
 
 ## 🔒 Segurança
 
